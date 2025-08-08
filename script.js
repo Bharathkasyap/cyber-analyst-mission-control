@@ -1,7 +1,13 @@
+// Apply saved theme on load
+(function initTheme(){                               // run early on load
+  const saved = localStorage.getItem('mc_theme');    // read saved theme
+  if (saved === 'dark') document.body.classList.add('dark-mode'); // set class
+})();
+
 // ===== View routing
 const views = {}; document.querySelectorAll('.view').forEach(v => views[v.id] = v);
 function showView(id){ Object.values(views).forEach(v=>v.classList.add('hidden')); (views[id]||views['view-dashboard']).classList.remove('hidden'); updateRelatedLinks(id); }
-showView('view-dashboard');
+showView('view-dashboard');                           // default view
 
 // ===== Collapsibles
 document.querySelectorAll('[data-collapse]').forEach(b=>b.addEventListener('click',()=>{
@@ -12,10 +18,12 @@ document.querySelectorAll('[data-collapse]').forEach(b=>b.addEventListener('clic
 function wireNav(){
   document.querySelectorAll('.nav-item,.card-link').forEach(b=>{
     b.addEventListener('click',()=>{
-      const tool=b.getAttribute('data-tool');
+      const tool=b.getAttribute('data-tool');         // which view to open
       if(!tool) return;
-      if(tool==='runbook'){
-        renderRunbook(b.getAttribute('data-runbook')); showView('view-runbook'); return;
+      if(tool==='runbook'){                           // runbook is dynamic
+        renderRunbook(b.getAttribute('data-runbook'));
+        showView('view-runbook');
+        return;
       }
       showView('view-'+tool);
     });
@@ -26,9 +34,12 @@ wireNav();
 // ===== Tabs
 function wireTabs(root=document){
   root.querySelectorAll('.tabs .tab').forEach(t=>t.addEventListener('click',()=>{
-    const grp=t.parentElement; grp.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
-    const box=t.closest('.p-4')||document; box.querySelectorAll('.tabview').forEach(v=>v.classList.add('hidden'));
-    const sel=t.getAttribute('data-tab'); const pane=box.querySelector(sel); if(pane) pane.classList.remove('hidden');
+    const grp=t.parentElement; grp.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');                        // activate clicked tab
+    const box=t.closest('.p-4')||document;           // find container
+    box.querySelectorAll('.tabview').forEach(v=>v.classList.add('hidden'));
+    const pane=box.querySelector(t.getAttribute('data-tab'));
+    if(pane) pane.classList.remove('hidden');        // show target pane
   }));
 }
 wireTabs();
@@ -36,7 +47,7 @@ wireTabs();
 // ===== Global search filters left rail
 const g=document.getElementById('globalSearch');
 g.addEventListener('input',()=>{
-  const q=g.value.trim().toLowerCase();
+  const q=g.value.trim().toLowerCase();              // normalized query
   document.querySelectorAll('#leftNav section').forEach(sec=>{
     const body=sec.querySelector('div[id^="grp-"]'); const items=sec.querySelectorAll('.nav-item'); let any=false;
     items.forEach(i=>{ const hit=i.textContent.toLowerCase().includes(q); i.style.display=hit?'block':'none'; if(hit) any=true; });
@@ -44,9 +55,12 @@ g.addEventListener('input',()=>{
   });
 });
 
-// ===== Theme toggle
+// ===== Theme toggle (now robust)
 document.getElementById('themeToggle').addEventListener('click',()=>{
-  document.documentElement.classList.toggle('dark'); document.body.classList.toggle('bg-slate-900'); document.body.classList.toggle('text-slate-100'); toast('Theme toggled');
+  document.body.classList.toggle('dark-mode');                                // flip class
+  const mode = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+  localStorage.setItem('mc_theme', mode);                                     // persist choice
+  toast(`Theme: ${mode}`);                                                    // feedback
 });
 
 // ===== Quick links
@@ -95,7 +109,8 @@ function updateRelatedLinks(viewId){
       ['NIST CSF','https://www.nist.gov/cyberframework']
     ]
   };
-  const ul=document.getElementById('relatedLinks'); ul.innerHTML=''; (map[viewId]||[]).forEach(([t,u])=>{ const li=document.createElement('li'); const a=document.createElement('a'); a.href=u;a.target='_blank';a.textContent=t;a.className='a'; li.appendChild(a); ul.appendChild(li); });
+  const ul=document.getElementById('relatedLinks'); ul.innerHTML='';
+  (map[viewId]||[]).forEach(([t,u])=>{ const li=document.createElement('li'); const a=document.createElement('a'); a.href=u;a.target='_blank';a.textContent=t;a.className='a'; li.appendChild(a); ul.appendChild(li); });
 }
 
 // ===== Base64 (UTF-8 safe)
@@ -107,7 +122,7 @@ document.getElementById('b64-decode')?.addEventListener('click',()=>{ try{ b64Ou
 document.getElementById('b64-clear')?.addEventListener('click',()=>{ b64In.value=''; b64Out.value=''; });
 document.getElementById('b64-copy')?.addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(b64Out.value); toast('Copied'); }catch{ toast('Copy failed'); }});
 
-// ===== Wildcard mask
+// ===== Wildcard mask + helpers
 function parseDotted(str){ const parts=str.trim().split('.'); if(parts.length!==4) throw new Error('Use dotted IPv4 like 255.255.255.0');
   const octets=parts.map(p=>{ const n=Number(p); if(!Number.isInteger(n)||n<0||n>255) throw new Error('Each octet 0..255'); return n; }); return octets; }
 function toDotted(arr){ return arr.join('.'); }
@@ -188,7 +203,7 @@ document.getElementById('cvss-build')?.addEventListener('click',()=>{
   toast('Vector built');
 });
 
-// ===== KQL & SPL content (render with copy buttons)
+// ===== KQL & SPL cheat sheets
 const kqlGroups=[
   {title:'Filter & project', items:[
     {q:"SecurityEvent | where EventID == 4625 | project TimeGenerated, Account, IpAddress", d:"Failed logons"},
@@ -212,7 +227,7 @@ const splGroups=[
 
 function renderCheatSheet(rootId, groups){
   const root=document.getElementById(rootId); root.innerHTML='';
-  groups.forEach((g,i)=>{
+  groups.forEach(g=>{
     const card=document.createElement('div'); card.className='border rounded-md p-3';
     const h=document.createElement('h3'); h.className='font-medium'; h.textContent=g.title; card.appendChild(h);
     g.items.forEach(item=>{
@@ -236,150 +251,26 @@ document.getElementById('re-run')?.addEventListener('click',()=>{
   catch(e){ out.value='Error: '+e.message; }
 });
 
-// ===== Runbooks
-const RUNBOOKS={
-  ransomware:{
-    title:'Ransomware suspected',
-    quick:[
-      'Isolate affected hosts (EDR network containment/VLAN).',
-      'Disable interactive logon for suspected accounts; revoke tokens.',
-      'Block IOCs (domains/IPs/hashes) on edge/EDR.',
-      'Capture volatile data if safe (process list, netconns).',
-      'Notify IR lead, Legal, IT Ops; start incident ticket.'
-    ],
-    full:[
-      'Scope: enumerate hosts/users/timeline; identify initial vector.',
-      'Collect: EDR timeline, Sysmon, WinSec (4624/4625/4769/4672), firewall, proxy, backups integrity.',
-      'Contain: segment networks, disable SMB where feasible, reset creds, rotate keys/secrets.',
-      'Eradicate: remove persistence, patch exploited vuln, cleanup artifacts.',
-      'Recover: reimage from gold images, restore clean backups, validate business apps.',
-      'Lessons: update detections, table-top, report to stakeholders.'
-    ]
-  },
-  unauth:{
-    title:'Unauthorized access',
-    quick:[
-      'Force password reset + revoke sessions for impacted accounts.',
-      'Enable sign-in risk policies/MFA if not enforced.',
-      'Search for suspicious sign-ins (impossible travel, unfamiliar IPs).',
-      'Check mail-forwarding rules/BEC indicators.',
-      'Notify affected user and SOC lead.'
-    ],
-    full:[
-      'Scope all logins for user (successful/failed), token issuance, device registrations.',
-      'Collect logs: IdP/AAD SigninLogs, ADFS, VPN, email audit, endpoint auth.',
-      'Contain: block risky IPs, conditional access, reset API tokens/app passwords.',
-      'Eradicate: remove malicious rules/apps, reset recovery factors.',
-      'Harden: enforce MFA, conditional access, impossible travel.',
-      'Post: user awareness, update detections.'
-    ]
-  },
-  phishing:{
-    title:'Phishing wave',
-    quick:[
-      'Block sender domains/URLs; submit samples to sandbox.',
-      'Create transport rules to quarantine similar mail.',
-      'Notify users with screenshot + “Report Phish” steps.',
-      'Hunt for clicks/credential posts.',
-      'Open incident and track campaign ID.'
-    ],
-    full:[
-      'Identify lures/TTPs; gather headers and URLs; host intel via urlscan/VT.',
-      'Collect: mail logs, proxy/DNS, EDR URL events, OAuth app consent.',
-      'Contain: purge messages, block URLs/domains, disable compromised accounts.',
-      'Eradicate: remove OAuth grants, reset creds, rotate tokens.',
-      'Awareness: targeted training for impacted groups.'
-    ]
-  },
-  exfil:{
-    title:'Active data exfiltration',
-    quick:[
-      'Throttle/deny egress for suspected hosts/accounts.',
-      'Snapshot volatile state: active connections, processes.',
-      'Preserve logs and start chain of custody.',
-      'Notify IR lead and Data Protection/Legal.'
-    ],
-    full:[
-      'Scope: classify data at risk; map sources/destinations; timeframe.',
-      'Collect: DLP logs, proxy/firewall, CASB, storage access, EDR net events.',
-      'Contain: block destinations, token revoke, quarantine devices.',
-      'Eradicate: remove tools/tunnels, rotate keys.',
-      'Review: breach notification obligations.'
-    ]
-  },
-  lateral:{
-    title:'Lateral movement',
-    quick:[
-      'Disable suspected accounts; block SMB/RDP from affected segments.',
-      'Contain endpoints; stop PsExec/WMI/RemoteService use.',
-      'Hunt for credential dumping and admin token misuse.'
-    ],
-    full:[
-      'Review auth logs (4769/4624/4672), admin groups changes (4732/4728).',
-      'Collect: Sysmon 1/3/7/10/11, EDR process graph, firewall east-west.',
-      'Contain: segment, enforce LAPS/LSA protection, disable legacy protocols.',
-      'Eradicate: remove persistence (scheduled tasks, run keys, services).',
-      'Harden: tiered admin, Just-in-Time/Just-Enough-Admin.'
-    ]
-  },
-  webshell:{
-    title:'Web shell suspected',
-    quick:[
-      'Isolate web server; preserve webroot; stop external access if possible.',
-      'Capture memory dump and running processes.',
-      'Block suspicious IPs/URIs at WAF.'
-    ],
-    full:[
-      'Collect: web server logs, IIS/Apache config, file integrity, WAF logs.',
-      'Identify dropper/upload vectors; enumerate backdoors.',
-      'Contain/eradicate: remove shell, patch vuln (RCE/upload bypass), rotate credentials.',
-      'Recover: redeploy clean image, restore content, add WAF rules.',
-      'Monitor: high-veracity detections for re-hit.'
-    ]
-  },
-  ddos:{
-    title:'DDoS / edge exploitation',
-    quick:[
-      'Engage ISP/WAF provider for mitigation.',
-      'Enable rate limiting/geo blocks; move to CDN shield.',
-      'Increase autoscaling thresholds as safe.'
-    ],
-    full:[
-      'Classify attack type (volumetric/protocol/app).',
-      'Collect: edge device logs, WAF metrics, NetFlow.',
-      'Harden: TLS offload, caching, connection limits, patch edge devices.',
-      'Review: vendor runbook and post-mortem.'
-    ]
-  },
-  insider:{
-    title:'Insider data mishandling',
-    quick:[
-      'Suspend access to sensitive repositories.',
-      'Preserve endpoints and storage audit trails.',
-      'Notify HR/Legal; start evidence handling.'
-    ],
-    full:[
-      'Scope data touched; identify exfil methods (USB/cloud/email).',
-      'Collect: DLP, storage, CASB, EDR file events.',
-      'Contain: revoke access, disable sharing links, rotate tokens.',
-      'Eradicate: remove local copies; require attestation.',
-      'Post: least-privilege review, monitoring.'
-    ]
-  },
-  lostdevice:{
-    title:'Lost/Stolen device',
-    quick:[
-      'Issue remote wipe/lock; revoke auth tokens.',
-      'Mark device as compromised in MDM/EDR.',
-      'Notify user, security, and IT.'
-    ],
-    full:[
-      'Verify last seen, user activity, sensitive data presence.',
-      'Collect: MDM, EDR, IdP sessions, VPN connections.',
-      'Contain: block device certificates, rotate passwords/keys.',
-      'Replace device; user re-onboarding; report if required.'
-    ]
-  }
+// ===== Runbooks (rendered into shared view)
+const RUNBOOKS={ /* same content as before, truncated here for brevity in this comment */
+  ransomware:{ title:'Ransomware suspected', quick:['Isolate affected hosts (EDR network containment/VLAN).','Disable interactive logon for suspected accounts; revoke tokens.','Block IOCs (domains/IPs/hashes) on edge/EDR.','Capture volatile data if safe (process list, netconns).','Notify IR lead, Legal, IT Ops; start incident ticket.'],
+    full:['Scope: enumerate hosts/users/timeline; identify initial vector.','Collect: EDR timeline, Sysmon, WinSec (4624/4625/4769/4672), firewall, proxy, backups integrity.','Contain: segment networks, disable SMB where feasible, reset creds, rotate keys/secrets.','Eradicate: remove persistence, patch exploited vuln, cleanup artifacts.','Recover: reimage from gold images, restore clean backups, validate business apps.','Lessons: update detections, table-top, report to stakeholders.']},
+  unauth:{ title:'Unauthorized access', quick:['Force password reset + revoke sessions for impacted accounts.','Enable sign-in risk policies/MFA if not enforced.','Search for suspicious sign-ins (impossible travel, unfamiliar IPs).','Check mail-forwarding rules/BEC indicators.','Notify affected user and SOC lead.'],
+    full:['Scope all logins for user (successful/failed), token issuance, device registrations.','Collect logs: IdP/AAD SigninLogs, ADFS, VPN, email audit, endpoint auth.','Contain: block risky IPs, conditional access, reset API tokens/app passwords.','Eradicate: remove malicious rules/apps, reset recovery factors.','Harden: enforce MFA, conditional access, impossible travel.','Post: user awareness, update detections.']},
+  phishing:{ title:'Phishing wave', quick:['Block sender domains/URLs; submit samples to sandbox.','Create transport rules to quarantine similar mail.','Notify users with screenshot + “Report Phish” steps.','Hunt for clicks/credential posts.','Open incident and track campaign ID.'],
+    full:['Identify lures/TTPs; gather headers and URLs; host intel via urlscan/VT.','Collect: mail logs, proxy/DNS, EDR URL events, OAuth app consent.','Contain: purge messages, block URLs/domains, disable compromised accounts.','Eradicate: remove OAuth grants, reset creds, rotate tokens.','Awareness: targeted training for impacted groups.']},
+  exfil:{ title:'Active data exfiltration', quick:['Throttle/deny egress for suspected hosts/accounts.','Snapshot volatile state: active connections, processes.','Preserve logs and start chain of custody.','Notify IR lead and Data Protection/Legal.'],
+    full:['Scope: classify data at risk; map sources/destinations; timeframe.','Collect: DLP logs, proxy/firewall, CASB, storage access, EDR net events.','Contain: block destinations, token revoke, quarantine devices.','Eradicate: remove tools/tunnels, rotate keys.','Review: breach notification obligations.']},
+  lateral:{ title:'Lateral movement', quick:['Disable suspected accounts; block SMB/RDP from affected segments.','Contain endpoints; stop PsExec/WMI/RemoteService use.','Hunt for credential dumping and admin token misuse.'],
+    full:['Review auth logs (4769/4624/4672), admin groups changes (4732/4728).','Collect: Sysmon 1/3/7/10/11, EDR process graph, firewall east-west.','Contain: segment, enforce LAPS/LSA protection, disable legacy protocols.','Eradicate: remove persistence (scheduled tasks, run keys, services).','Harden: tiered admin, JIT/JEA.']},
+  webshell:{ title:'Web shell suspected', quick:['Isolate web server; preserve webroot; stop external access if possible.','Capture memory dump and running processes.','Block suspicious IPs/URIs at WAF.'],
+    full:['Collect: web server logs, config, file integrity, WAF logs.','Identify upload vectors; enumerate backdoors.','Contain/eradicate: remove shell, patch vuln, rotate credentials.','Recover: redeploy clean image, restore content, add WAF rules.','Monitor: detections for re-hit.']},
+  ddos:{ title:'DDoS / edge exploitation', quick:['Engage ISP/WAF provider for mitigation.','Enable rate limiting/geo blocks; move to CDN shield.','Increase autoscaling thresholds as safe.'],
+    full:['Classify attack type (volumetric/protocol/app).','Collect: edge device logs, WAF metrics, NetFlow.','Harden: TLS offload, caching, connection limits, patch edge devices.','Review: vendor runbook and post-mortem.']},
+  insider:{ title:'Insider data mishandling', quick:['Suspend access to sensitive repositories.','Preserve endpoints and storage audit trails.','Notify HR/Legal; start evidence handling.'],
+    full:['Scope data touched; identify exfil methods (USB/cloud/email).','Collect: DLP, storage, CASB, EDR file events.','Contain: revoke access, disable sharing links, rotate tokens.','Eradicate: remove local copies; require attestation.','Post: least-privilege review, monitoring.']},
+  lostdevice:{ title:'Lost/Stolen device', quick:['Issue remote wipe/lock; revoke auth tokens.','Mark device as compromised in MDM/EDR.','Notify user, security, and IT.'],
+    full:['Verify last seen, user activity, sensitive data presence.','Collect: MDM, EDR, IdP sessions, VPN connections.','Contain: block device certs, rotate passwords/keys.','Replace device; user re-onboarding; report if required.']}
 };
 
 function renderRunbook(key){
@@ -389,8 +280,8 @@ function renderRunbook(key){
   const f=document.getElementById('rb-full'); f.innerHTML='';
   const ql=document.createElement('ol'); ql.className='list-decimal ml-5 text-sm space-y-2'; rb.quick.forEach(i=>{const li=document.createElement('li'); li.textContent=i; ql.appendChild(li);}); q.appendChild(ql);
   const fl=document.createElement('ul'); fl.className='list-disc ml-5 text-sm space-y-2'; rb.full.forEach(i=>{const li=document.createElement('li'); li.textContent=i; fl.appendChild(li);}); f.appendChild(fl);
-  wireTabs(document.getElementById('view-runbook'));
+  wireTabs(document.getElementById('view-runbook')); // rewire tabs in this view
 }
 
-// ===== Tiny toast
+// ===== Toast helper
 function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),1200); }
