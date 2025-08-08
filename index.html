@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cyber Analyst Mission Control</title>
+
+  <!-- Tailwind CDN for fast, professional styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- App styles (we’ll add this next) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+  <!-- Top bar -->
+  <header class="w-full border-b bg-white sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center gap-3 p-3">
+      <h1 class="text-xl font-semibold">Cyber Analyst Mission Control</h1>
+
+      <!-- Global search (wired in script.js) -->
+      <input id="globalSearch" type="search" placeholder="Search tools, runbooks, links"
+             class="ml-auto w-80 px-3 py-2 border rounded-md focus:outline-none focus:ring" />
+
+      <!-- Theme toggle (wired in script.js) -->
+      <button id="themeToggle" class="px-3 py-2 border rounded-md">Theme</button>
+    </div>
+  </header>
+
+  <!-- Three-column layout: Left nav, Main content, Right rail -->
+  <main class="max-w-7xl mx-auto grid grid-cols-12 gap-4 p-4">
+
+    <!-- Left rail: Navigation & discovery -->
+    <aside class="col-span-3 hidden lg:block">
+      <nav id="leftNav" class="space-y-3">
+
+        <!-- Networking -->
+        <section class="bg-white border rounded-md">
+          <button data-collapse="#grp-networking" class="w-full flex items-center justify-between p-3">
+            <span class="font-medium">Networking</span><span>▾</span>
+          </button>
+          <div id="grp-networking" class="p-2 border-t space-y-1">
+            <button data-tool="cidr" class="nav-item">CIDR Calculator</button>
+            <button data-tool="wildcard" class="nav-item">Wildcard Mask</button>
+            <button data-tool="baseConv" class="nav-item">Hex ↔ Dec</button>
+            <button data-tool="timestamp" class="nav-item">Timestamp Converter</button>
+          </div>
+        </section>
+
+        <!-- Crypto & Encoding -->
+        <section class="bg-white border rounded-md">
+          <button data-collapse="#grp-crypto" class="w-full flex items-center justify-between p-3">
+            <span class="font-medium">Crypto & Encoding</span><span>▾</span>
+          </button>
+          <div id="grp-crypto" class="p-2 border-t space-y-1">
+            <button data-tool="base64" class="nav-item">Base64 Encode Decode</button>
+            <button data-tool="hash" class="nav-item">Hash Generator</button>
+            <button data-tool="jwt" class="nav-item">JWT Decoder</button>
+          </div>
+        </section>
+
+        <!-- Risk & Governance -->
+        <section class="bg-white border rounded-md">
+          <button data-collapse="#grp-risk" class="w-full flex items-center justify-between p-3">
+            <span class="font-medium">Risk & Governance</span><span>▾</span>
+          </button>
+          <div id="grp-risk" class="p-2 border-t space-y-1">
+            <button data-tool="cvss" class="nav-item">CVSS Helper</button>
+            <button data-tool="riskMath" class="nav-item">ALE SLE ARO</button>
+            <button data-tool="rpoRto" class="nav-item">RPO RTO Planner</button>
+          </div>
+        </section>
+
+        <!-- SIEM & Detection -->
+        <section class="bg-white border rounded-md">
+          <button data-collapse="#grp-siem" class="w-full flex items-center justify-between p-3">
+            <span class="font-medium">SIEM & Detection</span><span>▾</span>
+          </button>
+          <div id="grp-siem" class="p-2 border-t space-y-1">
+            <button data-tool="kqlCheat" class="nav-item">KQL Cheat Sheet</button>
+            <button data-tool="splCheat" class="nav-item">SPL Cheat Sheet</button>
+            <button data-tool="regex" class="nav-item">Regex Tester</button>
+          </div>
+        </section>
+
+        <!-- Triage & Artifacts -->
+        <section class="bg-white border rounded-md">
+          <button data-collapse="#grp-triage" class="w-full flex items-center justify-between p-3">
+            <span class="font-medium">Triage & Artifacts</span><span>▾</span>
+          </button>
+          <div id="grp-triage" class="p-2 border-t space-y-1">
+            <button data-tool="emailParser" class="nav-item">Email Header Parser</button>
+            <button data-tool="urlParser" class="nav-item">URL Analyzer</button>
+            <button data-tool="uaParser" class="nav-item">User Agent Parser</button>
+          </div>
+        </section>
+
+        <!-- Cloud Security -->
+        <section class="bg-white border rounded-md">
+          <button data-collapse="#grp-cloud" class="w-full flex items-center justify-between p-3">
+            <span class="font-medium">Cloud Security</span><span>▾</span>
+          </button>
+          <div id="grp-cloud" class="p-2 border-t space-y-1">
+            <button data-tool="sentinelSizing" class="nav-item">Sentinel Ingestion Estimator</button>
+            <button data-tool="splunkSizing" class="nav-item">Splunk License Estimator</button>
+            <button data-tool="orgPlanner" class="nav-item">Org Planner</button>
+          </div>
+        </section>
+
+        <!-- Runbooks -->
+        <section class="bg-white border rounded-md">
+          <button data-collapse="#grp-runbooks" class="w-full flex items-center justify-between p-3">
+            <span class="font-medium">Runbooks</span><span>▾</span>
+          </button>
+          <div id="grp-runbooks" class="p-2 border-t space-y-1">
+            <button data-tool="rb-ransomware" class="nav-item">Ransomware Suspected</button>
+            <button data-tool="rb-unauth" class="nav-item">Unauthorized Access</button>
+            <button data-tool="rb-phishing" class="nav-item">Phishing Wave</button>
+          </div>
+        </section>
+
+        <!-- Gold Links -->
+        <section class="bg-white border rounded-md">
+          <button data-collapse="#grp-links" class="w-full flex items-center justify-between p-3">
+            <span class="font-medium">Gold Links</span><span>▾</span>
+          </button>
+          <div id="grp-links" class="p-2 border-t space-y-1">
+            <button data-tool="goldLinks" class="nav-item">Curated Docs & References</button>
+          </div>
+        </section>
+      </nav>
+    </aside>
+
+    <!-- Main content: The workshop -->
+    <section id="main" class="col-span-12 lg:col-span-6 min-h-[70vh] space-y-4">
+      <!-- Dashboard (default) -->
+      <div id="view-dashboard" class="view">
+        <div class="bg-white border rounded-md p-4">
+          <h2 class="text-lg font-semibold mb-2">Dashboard</h2>
+          <p class="text-sm">Quick access to favorites and recent tools.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+            <button data-tool="base64" class="card-link">Open Base64</button>
+            <button data-tool="cidr" class="card-link">Open CIDR</button>
+            <button data-tool="kqlCheat" class="card-link">Open KQL</button>
+            <button data-tool="goldLinks" class="card-link">Open Gold Links</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Base64 tool -->
+      <div id="view-base64" class="view hidden bg-white border rounded-md p-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold">Base64 Encode Decode</h2>
+          <div class="text-xs text-slate-500">Client side only</div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+          <div>
+            <label class="text-sm">Input</label>
+            <textarea id="b64-in" class="w-full h-48 border rounded-md p-2"></textarea>
+            <div class="flex gap-2 mt-2">
+              <button id="b64-encode" class="btn">Encode</button>
+              <button id="b64-decode" class="btn">Decode</button>
+              <button id="b64-clear" class="btn">Clear</button>
+            </div>
+          </div>
+          <div>
+            <label class="text-sm">Output</label>
+            <textarea id="b64-out" class="w-full h-48 border rounded-md p-2" readonly></textarea>
+            <div class="flex gap-2 mt-2">
+              <button id="b64-copy" class="btn">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CIDR placeholder (we wire next) -->
+      <div id="view-cidr" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">CIDR Calculator</h2>
+        <p class="text-sm mb-2">Coming next: IPv4 and IPv6 breakdown, host counts, ranges, and wildcard mask.</p>
+      </div>
+
+      <!-- Gold links -->
+      <div id="view-goldLinks" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">Curated Docs & References</h2>
+        <ul class="list-disc ml-5 mt-2 text-sm space-y-1">
+          <li><a class="a" href="https://learn.microsoft.com/en-us/kusto/query" target="_blank">Kusto Query Language Docs</a></li>
+          <li><a class="a" href="https://learn.microsoft.com/en-us/azure/sentinel" target="_blank">Microsoft Sentinel Docs</a></li>
+          <li><a class="a" href="https://attack.mitre.org/matrices/enterprise/" target="_blank">MITRE ATT&CK Enterprise Matrix</a></li>
+          <li><a class="a" href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank">CISA KEV Catalog</a></li>
+          <li><a class="a" href="https://nvd.nist.gov/vuln/search" target="_blank">NVD CVE Search</a></li>
+          <li><a class="a" href="https://www.nist.gov/cyberframework" target="_blank">NIST CSF</a></li>
+          <li><a class="a" href="https://docs.splunk.com/Documentation/Splunk/9.4.2/SearchReference/WhatsInThisManual" target="_blank">Splunk SPL Search Reference</a></li>
+          <li><a class="a" href="https://docs.paloaltonetworks.com/" target="_blank">Palo Alto Networks Tech Docs</a></li>
+          <li><a class="a" href="https://www.first.org/cvss/calculator/3-1" target="_blank">CVSS v3.1 Calculator</a></li>
+          <li><a class="a" href="https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator" target="_blank">NVD CVSS v3 Calculator</a></li>
+          <li><a class="a" href="https://github.com/SigmaHQ/sigma" target="_blank">Sigma Rules</a></li>
+          <li><a class="a" href="https://atomicredteam.io/" target="_blank">Atomic Red Team</a></li>
+        </ul>
+      </div>
+
+      <!-- Runbook example -->
+      <div id="view-rb-ransomware" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">Runbook: Ransomware suspected</h2>
+        <div class="mt-2">
+          <div class="tabs mb-3">
+            <button class="tab active" data-tab="#rb-r-quick">5 minute actions</button>
+            <button class="tab" data-tab="#rb-r-full">Full checklist</button>
+          </div>
+          <div id="rb-r-quick" class="tabview">
+            <ol class="list-decimal ml-5 text-sm space-y-2">
+              <li>Isolate impacted hosts from network.</li>
+              <li>Disable interactive logons for suspected accounts.</li>
+              <li>Capture volatile data if safe to do so.</li>
+              <li>Block IOC domains and hashes at edge and EDR.</li>
+              <li>Notify incident response lead and legal.</li>
+            </ol>
+          </div>
+          <div id="rb-r-full" class="tabview hidden">
+            <ul class="list-disc ml-5 text-sm space-y-2">
+              <li>Scope affected systems, users, and time window.</li>
+              <li>Collect EDR timeline, Sysmon, Windows Security, firewall, and proxy logs.</li>
+              <li>Contain via segmentation, revoke tokens, reset creds, rotate keys.</li>
+              <li>Eradicate and recover from clean backups; validate integrity.</li>
+              <li>Post-incident review and detection updates.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right rail: Context & quick actions -->
+    <aside class="col-span-3 hidden lg:block space-y-4">
+      <!-- Context-related links (auto-updated by script) -->
+      <div class="bg-white border rounded-md p-4">
+        <h3 class="font-semibold mb-2">Related Links</h3>
+        <ul id="relatedLinks" class="text-sm list-disc ml-5 space-y-1"></ul>
+      </div>
+
+      <!-- Personal quick links -->
+      <div class="bg-white border rounded-md p-4">
+        <h3 class="font-semibold mb-2">Personal Quick Links</h3>
+        <div class="flex gap-2 mb-2">
+          <input id="ql-url" class="flex-1 border rounded-md px-2 py-1" placeholder="https://example.com">
+          <button id="ql-add" class="btn">Add</button>
+        </div>
+        <ul id="ql-list" class="text-sm list-disc ml-5 space-y-1"></ul>
+      </div>
+
+      <!-- Notes -->
+      <div class="bg-white border rounded-md p-4">
+        <h3 class="font-semibold mb-2">Notes</h3>
+        <textarea id="notes" class="w-full h-32 border rounded-md p-2" placeholder="Temporary scratchpad"></textarea>
+        <div class="text-xs text-slate-500 mt-1">Auto saved locally</div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- App logic (we’ll add script.js next) -->
+  <script src="script.js"></script>
+</body>
+</html>
