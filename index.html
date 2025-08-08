@@ -4,23 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cyber Analyst Mission Control</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .nav-item{display:block;width:100%;text-align:left;padding:.5rem .75rem;border-radius:.375rem;cursor:pointer}
-    .nav-item:hover{background:#f1f5f9}
-    .card-link{padding:.5rem .75rem;border:1px solid #e2e8f0;border-radius:.375rem;background:#fff;text-align:center}
-    .card-link:hover{background:#f8fafc}
-    .btn{padding:.5rem .75rem;border:1px solid #e2e8f0;border-radius:.375rem;background:#fff;cursor:pointer}
-    .btn:hover{background:#f8fafc}
-    .a{color:#2563eb;text-decoration:underline}
-    .tabs .tab{padding:.25rem .5rem;border:1px solid #e2e8f0;border-radius:.375rem;margin-right:.5rem;cursor:pointer}
-    .tabs .tab.active{background:#eef2ff}
-    .hidden{display:none}
-    .toast{position:fixed;bottom:1.25rem;right:1.25rem;background:#000;color:#fff;padding:.5rem .75rem;border-radius:.375rem;opacity:.9;font-size:.875rem}
-    .mono{font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
-    @media (max-width: 1024px){.grid2,.grid3{grid-template-columns:1fr}}
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-slate-50 text-slate-900">
   <!-- Top bar -->
@@ -253,7 +237,7 @@
       <!-- CVSS v3.1 helper -->
       <div id="view-cvss" class="view hidden bg-white border rounded-md p-4">
         <h2 class="text-lg font-semibold">CVSS v3.1 Vector Helper</h2>
-        <p class="text-sm text-slate-600">Build a base vector string quickly, then open in FIRST/NVD calculators for official scoring.</p>
+        <p class="text-sm text-slate-600">Build a base vector then open in FIRST/NVD calculators for official scoring.</p>
         <div class="grid2 mt-3">
           <div class="border rounded-md p-3">
             <div class="grid grid-cols-2 gap-2 text-sm">
@@ -299,7 +283,7 @@
               <a id="cvss-first" class="a" target="_blank">Open in FIRST</a>
               <a id="cvss-nvd" class="a" target="_blank">Open in NVD</a>
             </div>
-            <div id="cvss-note" class="text-xs text-slate-500 mt-2">Exact score should be computed in the official calculators.</div>
+            <div class="text-xs text-slate-500 mt-2">Use official calculators for exact scoring.</div>
           </div>
         </div>
       </div>
@@ -336,7 +320,7 @@
         </div>
       </div>
 
-      <!-- Runbook renderer (shared view) -->
+      <!-- Runbook renderer -->
       <div id="view-runbook" class="view hidden bg-white border rounded-md p-4">
         <h2 id="rb-title" class="text-lg font-semibold">Runbook</h2>
         <div class="mt-2">
