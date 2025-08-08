@@ -1,74 +1,69 @@
-/* === General Utility Styles === */
+/* Color system via CSS variables */
+:root {
+  --bg: #f8fafc;             /* light bg */
+  --text: #0f172a;           /* light text */
+  --panel: #ffffff;          /* light panel */
+  --panel-border: #e2e8f0;   /* light border */
+  --muted: #64748b;          /* light muted text */
+  --link: #2563eb;           /* light link */
+  --hover: #f1f5f9;          /* light hover */
+  --tab-active: #eef2ff;     /* light tab */
+  --toast: #111827;          /* light toast bg */
+}
 
-/* Left navigation items */
-.nav-item {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
+body.dark-mode {
+  --bg: #0b1220;             /* dark bg */
+  --text: #e2e8f0;           /* dark text */
+  --panel: #0f172a;          /* dark panel */
+  --panel-border: #334155;   /* dark border */
+  --muted: #94a3b8;          /* dark muted text */
+  --link: #93c5fd;           /* dark link */
+  --hover: #111827;          /* dark hover */
+  --tab-active: #1f2937;     /* dark tab */
+  --toast: #111827;          /* dark toast bg */
 }
-.nav-item:hover {
-  background: #f1f5f9; /* Tailwind slate-100 */
-}
+
+/* Global */
+body { background: var(--bg) !important; color: var(--text) !important; }
+header { background: var(--panel) !important; border-color: var(--panel-border) !important; }
+
+/* Common panels, cards, lists */
+.bg-white { background: var(--panel) !important; }
+.border    { border-color: var(--panel-border) !important; }
+.text-slate-900 { color: var(--text) !important; }
+.text-slate-500, .text-slate-600 { color: var(--muted) !important; }
+
+/* Left nav items */
+.nav-item { display:block; width:100%; text-align:left; padding:.5rem .75rem; border-radius:.375rem; cursor:pointer; }
+.nav-item:hover { background: var(--hover); }
 
 /* Dashboard quick links */
-.card-link {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #e2e8f0; /* slate-200 */
-  border-radius: 0.375rem;
-  background: #fff;
-  text-align: center;
-}
-.card-link:hover {
-  background: #f8fafc; /* slate-50 */
-}
+.card-link { padding:.5rem .75rem; border:1px solid var(--panel-border); border-radius:.375rem; background: var(--panel); text-align:center; }
+.card-link:hover { background: var(--hover); }
 
 /* Buttons */
-.btn {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #e2e8f0; /* slate-200 */
-  border-radius: 0.375rem;
-  background: #fff;
-  cursor: pointer;
-}
-.btn:hover {
-  background: #f8fafc; /* slate-50 */
-}
+.btn { padding:.5rem .75rem; border:1px solid var(--panel-border); border-radius:.375rem; background: var(--panel); cursor:pointer; }
+.btn:hover { background: var(--hover); }
 
 /* Links */
-.a {
-  color: #2563eb; /* Tailwind blue-600 */
-  text-decoration: underline;
-}
+.a { color: var(--link); text-decoration: underline; }
 
-/* Tabs in runbooks and tools */
-.tabs .tab {
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.375rem;
-  margin-right: 0.5rem;
-  cursor: pointer;
-}
-.tabs .tab.active {
-  background: #eef2ff; /* indigo-50 */
-}
+/* Tabs */
+.tabs .tab { padding:.25rem .5rem; border:1px solid var(--panel-border); border-radius:.375rem; margin-right:.5rem; cursor:pointer; }
+.tabs .tab.active { background: var(--tab-active); }
 
-/* Hide/show helper */
-.hidden {
-  display: none;
-}
+/* Inputs / Textareas / Selects */
+input, textarea, select { background: var(--panel); color: var(--text); border:1px solid var(--panel-border); }
+input::placeholder, textarea::placeholder { color: var(--muted); }
 
-/* Toast notification */
-.toast {
-  position: fixed;
-  bottom: 1.25rem;
-  right: 1.25rem;
-  background: #000;
-  color: #fff;
-  padding: 0.75rem 1rem;
-  border-radius: 0.375rem;
-  opacity: 0.9;
-  font-size: 0.875rem;
-}
+/* Utility */
+.hidden { display:none; }
+.mono { font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; }
+
+/* Simple responsive grids used in content */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+@media (max-width: 1024px){.grid2,.grid3{grid-template-columns:1fr}}
+
+/* Toast */
+.toast { position:fixed; bottom:1.25rem; right:1.25rem; background: var(--toast); color:#fff; padding:.5rem .75rem; border-radius:.375rem; opacity:.92; font-size:.875rem; }
