@@ -3,33 +3,40 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cyber Analyst Mission Control</title>
-
-  <!-- Tailwind CDN for fast, professional styling -->
+  <!-- Tailwind for layout/styles -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- App styles (we’ll add this next) -->
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* minimal helpers (Tailwind does most) */
+    .nav-item{display:block;width:100%;text-align:left;padding:.5rem .75rem;border-radius:.375rem;cursor:pointer}
+    .nav-item:hover{background:#f1f5f9}
+    .card-link{padding:.5rem .75rem;border:1px solid #e2e8f0;border-radius:.375rem;background:#fff;text-align:center}
+    .card-link:hover{background:#f8fafc}
+    .btn{padding:.5rem .75rem;border:1px solid #e2e8f0;border-radius:.375rem;background:#fff;cursor:pointer}
+    .btn:hover{background:#f8fafc}
+    .a{color:#2563eb;text-decoration:underline}
+    .tabs .tab{padding:.25rem .5rem;border:1px solid #e2e8f0;border-radius:.375rem;margin-right:.5rem;cursor:pointer}
+    .tabs .tab.active{background:#eef2ff}
+    .hidden{display:none}
+    .toast{position:fixed;bottom:1.25rem;right:1.25rem;background:#000;color:#fff;padding:.5rem .75rem;border-radius:.375rem;opacity:.9;font-size:.875rem}
+    .mono{font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+    @media (max-width: 768px){.grid2,.grid3{grid-template-columns:1fr}}
+  </style>
 </head>
-
 <body class="bg-slate-50 text-slate-900">
   <!-- Top bar -->
   <header class="w-full border-b bg-white sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex items-center gap-3 p-3">
       <h1 class="text-xl font-semibold">Cyber Analyst Mission Control</h1>
-
-      <!-- Global search (wired in script.js) -->
-      <input id="globalSearch" type="search" placeholder="Search tools, runbooks, links"
-             class="ml-auto w-80 px-3 py-2 border rounded-md focus:outline-none focus:ring" />
-
-      <!-- Theme toggle (wired in script.js) -->
+      <input id="globalSearch" type="search" placeholder="Search tools, runbooks, links" class="ml-auto w-80 px-3 py-2 border rounded-md focus:outline-none focus:ring" />
       <button id="themeToggle" class="px-3 py-2 border rounded-md">Theme</button>
     </div>
   </header>
 
-  <!-- Three-column layout: Left nav, Main content, Right rail -->
+  <!-- Three-column layout -->
   <main class="max-w-7xl mx-auto grid grid-cols-12 gap-4 p-4">
-
-    <!-- Left rail: Navigation & discovery -->
+    <!-- Left rail -->
     <aside class="col-span-3 hidden lg:block">
       <nav id="leftNav" class="space-y-3">
 
@@ -53,8 +60,6 @@
           </button>
           <div id="grp-crypto" class="p-2 border-t space-y-1">
             <button data-tool="base64" class="nav-item">Base64 Encode Decode</button>
-            <button data-tool="hash" class="nav-item">Hash Generator</button>
-            <button data-tool="jwt" class="nav-item">JWT Decoder</button>
           </div>
         </section>
 
@@ -64,9 +69,8 @@
             <span class="font-medium">Risk & Governance</span><span>▾</span>
           </button>
           <div id="grp-risk" class="p-2 border-t space-y-1">
-            <button data-tool="cvss" class="nav-item">CVSS Helper</button>
-            <button data-tool="riskMath" class="nav-item">ALE SLE ARO</button>
-            <button data-tool="rpoRto" class="nav-item">RPO RTO Planner</button>
+            <button data-tool="cvss" class="nav-item">CVSS Helper (soon)</button>
+            <button data-tool="riskMath" class="nav-item">ALE SLE ARO (soon)</button>
           </div>
         </section>
 
@@ -76,33 +80,8 @@
             <span class="font-medium">SIEM & Detection</span><span>▾</span>
           </button>
           <div id="grp-siem" class="p-2 border-t space-y-1">
-            <button data-tool="kqlCheat" class="nav-item">KQL Cheat Sheet</button>
-            <button data-tool="splCheat" class="nav-item">SPL Cheat Sheet</button>
-            <button data-tool="regex" class="nav-item">Regex Tester</button>
-          </div>
-        </section>
-
-        <!-- Triage & Artifacts -->
-        <section class="bg-white border rounded-md">
-          <button data-collapse="#grp-triage" class="w-full flex items-center justify-between p-3">
-            <span class="font-medium">Triage & Artifacts</span><span>▾</span>
-          </button>
-          <div id="grp-triage" class="p-2 border-t space-y-1">
-            <button data-tool="emailParser" class="nav-item">Email Header Parser</button>
-            <button data-tool="urlParser" class="nav-item">URL Analyzer</button>
-            <button data-tool="uaParser" class="nav-item">User Agent Parser</button>
-          </div>
-        </section>
-
-        <!-- Cloud Security -->
-        <section class="bg-white border rounded-md">
-          <button data-collapse="#grp-cloud" class="w-full flex items-center justify-between p-3">
-            <span class="font-medium">Cloud Security</span><span>▾</span>
-          </button>
-          <div id="grp-cloud" class="p-2 border-t space-y-1">
-            <button data-tool="sentinelSizing" class="nav-item">Sentinel Ingestion Estimator</button>
-            <button data-tool="splunkSizing" class="nav-item">Splunk License Estimator</button>
-            <button data-tool="orgPlanner" class="nav-item">Org Planner</button>
+            <button data-tool="kqlCheat" class="nav-item">KQL Cheat Sheet (soon)</button>
+            <button data-tool="splCheat" class="nav-item">SPL Cheat Sheet (soon)</button>
           </div>
         </section>
 
@@ -113,8 +92,6 @@
           </button>
           <div id="grp-runbooks" class="p-2 border-t space-y-1">
             <button data-tool="rb-ransomware" class="nav-item">Ransomware Suspected</button>
-            <button data-tool="rb-unauth" class="nav-item">Unauthorized Access</button>
-            <button data-tool="rb-phishing" class="nav-item">Phishing Wave</button>
           </div>
         </section>
 
@@ -130,9 +107,9 @@
       </nav>
     </aside>
 
-    <!-- Main content: The workshop -->
+    <!-- Main content -->
     <section id="main" class="col-span-12 lg:col-span-6 min-h-[70vh] space-y-4">
-      <!-- Dashboard (default) -->
+      <!-- Dashboard -->
       <div id="view-dashboard" class="view">
         <div class="bg-white border rounded-md p-4">
           <h2 class="text-lg font-semibold mb-2">Dashboard</h2>
@@ -140,22 +117,22 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
             <button data-tool="base64" class="card-link">Open Base64</button>
             <button data-tool="cidr" class="card-link">Open CIDR</button>
-            <button data-tool="kqlCheat" class="card-link">Open KQL</button>
+            <button data-tool="wildcard" class="card-link">Open Wildcard</button>
             <button data-tool="goldLinks" class="card-link">Open Gold Links</button>
           </div>
         </div>
       </div>
 
-      <!-- Base64 tool -->
+      <!-- Base64 -->
       <div id="view-base64" class="view hidden bg-white border rounded-md p-4">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold">Base64 Encode Decode</h2>
           <div class="text-xs text-slate-500">Client side only</div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+        <div class="grid2 mt-3">
           <div>
             <label class="text-sm">Input</label>
-            <textarea id="b64-in" class="w-full h-48 border rounded-md p-2"></textarea>
+            <textarea id="b64-in" class="w-full h-48 border rounded-md p-2 mono"></textarea>
             <div class="flex gap-2 mt-2">
               <button id="b64-encode" class="btn">Encode</button>
               <button id="b64-decode" class="btn">Decode</button>
@@ -164,7 +141,7 @@
           </div>
           <div>
             <label class="text-sm">Output</label>
-            <textarea id="b64-out" class="w-full h-48 border rounded-md p-2" readonly></textarea>
+            <textarea id="b64-out" class="w-full h-48 border rounded-md p-2 mono" readonly></textarea>
             <div class="flex gap-2 mt-2">
               <button id="b64-copy" class="btn">Copy</button>
             </div>
@@ -172,49 +149,99 @@
         </div>
       </div>
 
-      <!-- CIDR placeholder (we wire next) -->
-      <div id="view-cidr" class="view hidden bg-white border rounded-md p-4">
-        <h2 class="text-lg font-semibold">CIDR Calculator</h2>
-        <p class="text-sm mb-2">Coming next: IPv4 and IPv6 breakdown, host counts, ranges, and wildcard mask.</p>
+      <!-- Wildcard Mask -->
+      <div id="view-wildcard" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">Wildcard Mask Calculator</h2>
+        <div class="mt-3 grid2">
+          <div class="border rounded-md p-3">
+            <h3 class="font-medium text-sm mb-2">From Subnet Mask</h3>
+            <label class="text-sm">Subnet mask (e.g., 255.255.255.0)</label>
+            <input id="wm-subnet" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="255.255.255.0">
+            <button id="wm-fromMask" class="btn mt-2">Calculate</button>
+          </div>
+          <div class="border rounded-md p-3">
+            <h3 class="font-medium text-sm mb-2">Result</h3>
+            <div class="text-sm">Wildcard mask</div>
+            <input id="wm-out-fromMask" class="w-full border rounded-md px-2 py-1 mt-1 mono" readonly>
+          </div>
+        </div>
+        <div class="mt-4 grid3">
+          <div class="border rounded-md p-3">
+            <h3 class="font-medium text-sm mb-2">From CIDR Prefix</h3>
+            <label class="text-sm">Prefix length 0–32</label>
+            <input id="wm-cidr" type="number" min="0" max="32" class="w-full border rounded-md px-2 py-1 mt-1" placeholder="24">
+            <button id="wm-fromCidr" class="btn mt-2">Calculate</button>
+          </div>
+          <div class="border rounded-md p-3">
+            <h3 class="font-medium text-sm mb-2">Subnet mask</h3>
+            <input id="wm-out-mask" class="w-full border rounded-md px-2 py-1 mono" readonly>
+          </div>
+          <div class="border rounded-md p-3">
+            <h3 class="font-medium text-sm mb-2">Wildcard mask</h3>
+            <input id="wm-out-wild" class="w-full border rounded-md px-2 py-1 mono" readonly>
+          </div>
+        </div>
       </div>
-      <!-- Wildcard Mask tool -->
-<div id="view-wildcard" class="view hidden bg-white border rounded-md p-4">
-  <h2 class="text-lg font-semibold">Wildcard Mask Calculator</h2>
 
-  <!-- From Subnet Mask -->
-  <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-    <div class="border rounded-md p-3">
-      <h3 class="font-medium text-sm mb-2">From Subnet Mask</h3>
-      <label class="text-sm">Subnet mask (e.g., 255.255.255.0)</label>
-      <input id="wm-subnet" class="w-full border rounded-md px-2 py-1 mt-1" placeholder="255.255.255.0">
-      <button id="wm-fromMask" class="btn mt-2">Calculate</button>
-    </div>
-    <div class="border rounded-md p-3">
-      <h3 class="font-medium text-sm mb-2">Result</h3>
-      <div class="text-sm">Wildcard mask</div>
-      <input id="wm-out-fromMask" class="w-full border rounded-md px-2 py-1 mt-1" readonly>
-    </div>
-  </div>
+      <!-- Hex ↔ Dec -->
+      <div id="view-baseConv" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">Hex ↔ Dec Converter</h2>
+        <div class="grid2 mt-3">
+          <div class="border rounded-md p-3">
+            <label class="text-sm">Decimal → Hex</label>
+            <input id="dec-in" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="65535">
+            <button id="dec-to-hex" class="btn mt-2">Convert</button>
+            <input id="dec-hex-out" class="w-full border rounded-md px-2 py-1 mt-2 mono" readonly>
+          </div>
+          <div class="border rounded-md p-3">
+            <label class="text-sm">Hex → Decimal</label>
+            <input id="hex-in" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="0xFFFF or FFFF">
+            <button id="hex-to-dec" class="btn mt-2">Convert</button>
+            <input id="hex-dec-out" class="w-full border rounded-md px-2 py-1 mt-2 mono" readonly>
+          </div>
+        </div>
+      </div>
 
-  <!-- From CIDR Prefix -->
-  <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-    <div class="border rounded-md p-3">
-      <h3 class="font-medium text-sm mb-2">From CIDR Prefix</h3>
-      <label class="text-sm">Prefix length 0 to 32</label>
-      <input id="wm-cidr" type="number" min="0" max="32" class="w-full border rounded-md px-2 py-1 mt-1" placeholder="24">
-      <button id="wm-fromCidr" class="btn mt-2">Calculate</button>
-    </div>
-    <div class="border rounded-md p-3">
-      <h3 class="font-medium text-sm mb-2">Subnet mask</h3>
-      <input id="wm-out-mask" class="w-full border rounded-md px-2 py-1" readonly>
-    </div>
-    <div class="border rounded-md p-3">
-      <h3 class="font-medium text-sm mb-2">Wildcard mask</h3>
-      <input id="wm-out-wild" class="w-full border rounded-md px-2 py-1" readonly>
-    </div>
-  </div>
-</div>
+      <!-- Timestamp converter -->
+      <div id="view-timestamp" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">Timestamp Converter</h2>
+        <div class="grid3 mt-3">
+          <div class="border rounded-md p-3">
+            <label class="text-sm">Unix epoch (seconds)</label>
+            <input id="ts-epoch" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="1718192000">
+            <button id="ts-from-epoch" class="btn mt-2">Epoch → Human</button>
+            <div class="text-xs text-slate-500 mt-1">Assumes UTC for parsing</div>
+          </div>
+          <div class="border rounded-md p-3">
+            <label class="text-sm">Human (YYYY-MM-DD HH:mm:ss)</label>
+            <input id="ts-human" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="2025-06-12 15:30:00">
+            <button id="ts-to-epoch" class="btn mt-2">Human → Epoch</button>
+            <div class="text-xs text-slate-500 mt-1">Assumes input is UTC</div>
+          </div>
+          <div class="border rounded-md p-3">
+            <label class="text-sm">Results</label>
+            <textarea id="ts-out" class="w-full h-28 border rounded-md p-2 mono" readonly></textarea>
+          </div>
+        </div>
+      </div>
 
+      <!-- CIDR calculator (IPv4) -->
+      <div id="view-cidr" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">CIDR Calculator (IPv4)</h2>
+        <div class="grid2 mt-3">
+          <div class="border rounded-md p-3">
+            <label class="text-sm">IP address</label>
+            <input id="cidr-ip" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="192.168.1.10">
+            <label class="text-sm mt-3 block">Prefix (0–32)</label>
+            <input id="cidr-prefix" type="number" min="0" max="32" class="w-full border rounded-md px-2 py-1 mt-1" placeholder="24">
+            <button id="cidr-calc" class="btn mt-2">Calculate</button>
+          </div>
+          <div class="border rounded-md p-3">
+            <label class="text-sm">Results</label>
+            <textarea id="cidr-out" class="w-full h-48 border rounded-md p-2 mono" readonly></textarea>
+          </div>
+        </div>
+      </div>
 
       <!-- Gold links -->
       <div id="view-goldLinks" class="view hidden bg-white border rounded-md p-4">
@@ -248,16 +275,16 @@
               <li>Isolate impacted hosts from network.</li>
               <li>Disable interactive logons for suspected accounts.</li>
               <li>Capture volatile data if safe to do so.</li>
-              <li>Block IOC domains and hashes at edge and EDR.</li>
-              <li>Notify incident response lead and legal.</li>
+              <li>Block IOC domains/hashes at edge and EDR.</li>
+              <li>Notify IR lead and legal.</li>
             </ol>
           </div>
           <div id="rb-r-full" class="tabview hidden">
             <ul class="list-disc ml-5 text-sm space-y-2">
-              <li>Scope affected systems, users, and time window.</li>
-              <li>Collect EDR timeline, Sysmon, Windows Security, firewall, and proxy logs.</li>
-              <li>Contain via segmentation, revoke tokens, reset creds, rotate keys.</li>
-              <li>Eradicate and recover from clean backups; validate integrity.</li>
+              <li>Scope affected systems, users, and window.</li>
+              <li>Collect EDR, Sysmon, Windows Security, firewall, proxy logs.</li>
+              <li>Contain: segment, revoke tokens, reset creds, rotate keys.</li>
+              <li>Recover: restore clean backups, validate integrity.</li>
               <li>Post-incident review and detection updates.</li>
             </ul>
           </div>
@@ -265,15 +292,12 @@
       </div>
     </section>
 
-    <!-- Right rail: Context & quick actions -->
+    <!-- Right rail -->
     <aside class="col-span-3 hidden lg:block space-y-4">
-      <!-- Context-related links (auto-updated by script) -->
       <div class="bg-white border rounded-md p-4">
         <h3 class="font-semibold mb-2">Related Links</h3>
         <ul id="relatedLinks" class="text-sm list-disc ml-5 space-y-1"></ul>
       </div>
-
-      <!-- Personal quick links -->
       <div class="bg-white border rounded-md p-4">
         <h3 class="font-semibold mb-2">Personal Quick Links</h3>
         <div class="flex gap-2 mb-2">
@@ -282,8 +306,6 @@
         </div>
         <ul id="ql-list" class="text-sm list-disc ml-5 space-y-1"></ul>
       </div>
-
-      <!-- Notes -->
       <div class="bg-white border rounded-md p-4">
         <h3 class="font-semibold mb-2">Notes</h3>
         <textarea id="notes" class="w-full h-32 border rounded-md p-2" placeholder="Temporary scratchpad"></textarea>
@@ -292,7 +314,138 @@
     </aside>
   </main>
 
-  <!-- App logic (we’ll add script.js next) -->
-  <script src="script.js"></script>
+  <!-- Inline logic -->
+  <script>
+    // ===== view routing =====
+    const views = {}; document.querySelectorAll('.view').forEach(v => views[v.id]=v);
+    function showView(id){ Object.values(views).forEach(v=>v.classList.add('hidden')); (views[id]||views['view-dashboard']).classList.remove('hidden'); updateRelatedLinks(id); }
+    showView('view-dashboard');
+
+    // ===== collapsibles =====
+    document.querySelectorAll('[data-collapse]').forEach(b=>b.addEventListener('click',()=>{ const t=document.querySelector(b.getAttribute('data-collapse')); if(t) t.classList.toggle('hidden'); }));
+
+    // ===== nav + dashboard links =====
+    function wireNav(){ document.querySelectorAll('.nav-item,.card-link').forEach(b=>b.addEventListener('click',()=>{ const id=b.getAttribute('data-tool'); if(id) showView('view-'+id); })); }
+    wireNav();
+
+    // ===== tabs =====
+    function wireTabs(root=document){
+      root.querySelectorAll('.tabs .tab').forEach(t=>t.addEventListener('click',()=>{
+        const box=t.closest('.p-4'); t.parentElement.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
+        box.querySelectorAll('.tabview').forEach(v=>v.classList.add('hidden')); box.querySelector(t.getAttribute('data-tab')).classList.remove('hidden');
+      }));
+    } wireTabs();
+
+    // ===== search filters left rail =====
+    const g = document.getElementById('globalSearch');
+    g.addEventListener('input', ()=>{
+      const q=g.value.trim().toLowerCase();
+      document.querySelectorAll('#leftNav section').forEach(sec=>{
+        const body=sec.querySelector('div[id^="grp-"]'); const items=sec.querySelectorAll('.nav-item'); let any=false;
+        items.forEach(i=>{ const hit=i.textContent.toLowerCase().includes(q); i.style.display=hit?'block':'none'; if(hit) any=true; });
+        if(!body) return; if(q==='') body.classList.remove('hidden'); else body.classList.toggle('hidden',!any);
+      });
+    });
+
+    // ===== theme toggle =====
+    document.getElementById('themeToggle').addEventListener('click',()=>{
+      document.documentElement.classList.toggle('dark'); document.body.classList.toggle('bg-slate-900'); document.body.classList.toggle('text-slate-100'); toast('Theme toggled');
+    });
+
+    // ===== quick links =====
+    const qlKey='mc_quicklinks';
+    function loadQL(){ const ul=document.getElementById('ql-list'); ul.innerHTML=''; const list=JSON.parse(localStorage.getItem(qlKey)||'[]');
+      list.forEach((u,idx)=>{ const li=document.createElement('li'); const a=document.createElement('a'); a.href=u;a.target='_blank';a.textContent=u;a.className='a';
+        const del=document.createElement('button'); del.textContent='×'; del.className='ml-2 btn';
+        del.addEventListener('click',()=>{ const arr=JSON.parse(localStorage.getItem(qlKey)||'[]'); arr.splice(idx,1); localStorage.setItem(qlKey,JSON.stringify(arr)); loadQL(); });
+        li.appendChild(a); li.appendChild(del); ul.appendChild(li); });
+    }
+    document.getElementById('ql-add').addEventListener('click',()=>{ const inp=document.getElementById('ql-url'); const url=inp.value.trim(); if(!url) return; const list=JSON.parse(localStorage.getItem(qlKey)||'[]'); list.push(url); localStorage.setItem(qlKey,JSON.stringify(list)); inp.value=''; loadQL(); });
+    loadQL();
+
+    // ===== notes autosave =====
+    const notesKey='mc_notes'; const notes=document.getElementById('notes'); notes.value=localStorage.getItem(notesKey)||''; notes.addEventListener('input',()=>localStorage.setItem(notesKey,notes.value));
+
+    // ===== related links per view =====
+    function updateRelatedLinks(viewId){
+      const map={
+        'view-base64': [
+          ['MDN Base64','https://developer.mozilla.org/en-US/docs/Glossary/Base64'],
+          ['MDN btoa','https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa'],
+          ['MDN atob','https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/atob']
+        ],
+        'view-cidr': [
+          ['IANA IPv4 Special-Purpose','https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml'],
+          ['RFC 4632 CIDR','https://www.rfc-editor.org/rfc/rfc4632']
+        ],
+        'view-goldLinks': [
+          ['KQL Docs','https://learn.microsoft.com/en-us/kusto/query'],
+          ['MITRE ATT&CK','https://attack.mitre.org/matrices/enterprise/'],
+          ['Splunk Search Reference','https://docs.splunk.com/Documentation/Splunk/9.4.2/SearchReference/WhatsInThisManual'],
+          ['Palo Alto Tech Docs','https://docs.paloaltonetworks.com/']
+        ],
+        'view-rb-ransomware': [
+          ['CISA KEV','https://www.cisa.gov/known-exploited-vulnerabilities-catalog'],
+          ['NIST CSF','https://www.nist.gov/cyberframework']
+        ]
+      };
+      const ul=document.getElementById('relatedLinks'); ul.innerHTML=''; (map[viewId]||[]).forEach(([t,u])=>{ const li=document.createElement('li'); const a=document.createElement('a'); a.href=u;a.target='_blank';a.textContent=t;a.className='a'; li.appendChild(a); ul.appendChild(li); });
+    }
+
+    // ===== Base64 (UTF-8 safe) =====
+    const b64In=document.getElementById('b64-in'), b64Out=document.getElementById('b64-out');
+    function b64enc(s){ const bytes=new TextEncoder().encode(s); let bin=''; bytes.forEach(b=>bin+=String.fromCharCode(b)); return btoa(bin); }
+    function b64dec(b){ const bin=atob(b); const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0)); return new TextDecoder().decode(bytes); }
+    document.getElementById('b64-encode')?.addEventListener('click',()=>{ try{ b64Out.value=b64enc(b64In.value); toast('Encoded'); }catch(e){ b64Out.value='Error: '+e.message; }});
+    document.getElementById('b64-decode')?.addEventListener('click',()=>{ try{ b64Out.value=b64dec(b64In.value.trim()); toast('Decoded'); }catch(e){ b64Out.value='Error: '+e.message; }});
+    document.getElementById('b64-clear')?.addEventListener('click',()=>{ b64In.value=''; b64Out.value=''; });
+    document.getElementById('b64-copy')?.addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(b64Out.value); toast('Copied'); }catch{ toast('Copy failed'); }});
+
+    // ===== Wildcard mask =====
+    function parseDotted(str){ const parts=str.trim().split('.'); if(parts.length!==4) throw new Error('Use dotted IPv4 like 255.255.255.0'); const octets=parts.map(p=>{ const n=Number(p); if(!Number.isInteger(n)||n<0||n>255) throw new Error('Each octet 0..255'); return n; }); return octets; }
+    function toDotted(arr){ return arr.join('.'); }
+    function wildcardFromMask(oct){ return oct.map(o=>255-o); }
+    function maskFromPrefix(pfx){ const p=Number(pfx); if(!Number.isInteger(p)||p<0||p>32) throw new Error('Prefix 0..32'); const bits=Array(32).fill(0).map((_,i)=>i<p?1:0); const o=[]; for(let i=0;i<4;i++){ const b=bits.slice(i*8,i*8+8).join(''); o.push(parseInt(b.padEnd(8,'0'),2)); } return o; }
+    document.getElementById('wm-fromMask')?.addEventListener('click',()=>{ const inp=document.getElementById('wm-subnet'); const out=document.getElementById('wm-out-fromMask'); try{ out.value=toDotted(wildcardFromMask(parseDotted(inp.value))); toast('Calculated'); }catch(e){ out.value='Error: '+e.message; }});
+    document.getElementById('wm-fromCidr')?.addEventListener('click',()=>{ const c=document.getElementById('wm-cidr'); const om=document.getElementById('wm-out-mask'); const ow=document.getElementById('wm-out-wild'); try{ const m=maskFromPrefix(c.value); om.value=toDotted(m); ow.value=toDotted(wildcardFromMask(m)); toast('Calculated'); }catch(e){ om.value=ow.value='Error: '+e.message; }});
+
+    // ===== Hex ↔ Dec =====
+    document.getElementById('dec-to-hex')?.addEventListener('click',()=>{ const v=document.getElementById('dec-in').value.trim(); const out=document.getElementById('dec-hex-out'); if(v===''){out.value='';return;} const n=Number(v); if(!Number.isFinite(n)||n<0){ out.value='Error: enter a non-negative number'; return; } out.value='0x'+Math.floor(n).toString(16).toUpperCase(); });
+    document.getElementById('hex-to-dec')?.addEventListener('click',()=>{ let v=document.getElementById('hex-in').value.trim(); const out=document.getElementById('hex-dec-out'); if(v===''){out.value='';return;} v=v.replace(/^0x/i,''); if(!/^[0-9a-f]+$/i.test(v)){ out.value='Error: hex only 0-9 A-F'; return; } out.value=String(parseInt(v,16)); });
+
+    // ===== Timestamp converter =====
+    function pad(n){return n.toString().padStart(2,'0');}
+    function fmt(d){ return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+':'+pad(d.getUTCSeconds())+' UTC'; }
+    document.getElementById('ts-from-epoch')?.addEventListener('click',()=>{ const v=Number(document.getElementById('ts-epoch').value.trim()); const out=document.getElementById('ts-out'); if(!Number.isFinite(v)){ out.value='Error: epoch seconds number required'; return; } const d=new Date(v*1000); out.value='UTC: '+fmt(d)+'\nLocal: '+new Date(v*1000).toString(); });
+    document.getElementById('ts-to-epoch')?.addEventListener('click',()=>{ const s=document.getElementById('ts-human').value.trim(); const out=document.getElementById('ts-out'); if(!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s)){ out.value='Error: use YYYY-MM-DD HH:mm:ss'; return; } const [date,time]=s.split(' '); const [Y,M,D]=date.split('-').map(Number); const [h,m,sec]=time.split(':').map(Number); const ms=Date.UTC(Y,M-1,D,h,m,sec); out.value='Epoch (s): '+Math.floor(ms/1000)+'\nUTC: '+fmt(new Date(ms))+'\nLocal: '+new Date(ms).toString(); });
+
+    // ===== CIDR calculator (IPv4) =====
+    function ipToInt(ip){ const a=ip.trim().split('.').map(x=>Number(x)); if(a.length!==4||a.some(x=>!Number.isInteger(x)||x<0||x>255)) throw new Error('Enter IPv4 like 192.168.1.10'); return ((a[0]<<24)>>>0) + (a[1]<<16) + (a[2]<<8) + a[3]; }
+    function intToIp(n){ return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.'); }
+    function maskFromPrefixInt(p){ if(p<0||p>32) throw new Error('Prefix 0..32'); return p===0?0:(((0xFFFFFFFF<< (32-p))>>>0)); }
+    document.getElementById('cidr-calc')?.addEventListener('click',()=>{
+      const ipStr=document.getElementById('cidr-ip').value.trim(); const pfx=Number(document.getElementById('cidr-prefix').value.trim()); const out=document.getElementById('cidr-out');
+      try{
+        const ip=ipToInt(ipStr); const mask=maskFromPrefixInt(pfx); const network=(ip & mask)>>>0; const broadcast=(network | (~mask>>>0))>>>0;
+        const firstHost = (pfx===32)? network : ((network+1)>>>0);
+        const lastHost  = (pfx>=31)? broadcast : ((broadcast-1)>>>0);
+        const hostCount = pfx===32? 1 : (pfx===31? 2 : Math.max(0, (broadcast - network - 1)));
+        const maskArr=[(mask>>>24)&255,(mask>>>16)&255,(mask>>>8)&255,mask&255];
+        const wildcardArr=maskArr.map(o=>255-o);
+        out.value =
+`Network:   ${intToIp(network)}/${pfx}
+Broadcast: ${intToIp(broadcast)}
+First host:${intToIp(firstHost)}
+Last host: ${intToIp(lastHost)}
+Hosts:     ${hostCount}
+Mask:      ${maskArr.join('.')}
+Wildcard:  ${wildcardArr.join('.')}`;
+        toast('Calculated');
+      }catch(e){ out.value='Error: '+e.message; }
+    });
+
+    // ===== tiny toast =====
+    function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),1200); }
+  </script>
 </body>
 </html>
