@@ -3,10 +3,8 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cyber Analyst Mission Control</title>
-  <!-- Tailwind for layout/styles -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* minimal helpers (Tailwind does most) */
     .nav-item{display:block;width:100%;text-align:left;padding:.5rem .75rem;border-radius:.375rem;cursor:pointer}
     .nav-item:hover{background:#f1f5f9}
     .card-link{padding:.5rem .75rem;border:1px solid #e2e8f0;border-radius:.375rem;background:#fff;text-align:center}
@@ -21,7 +19,7 @@
     .mono{font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
     .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
-    @media (max-width: 768px){.grid2,.grid3{grid-template-columns:1fr}}
+    @media (max-width: 1024px){.grid2,.grid3{grid-template-columns:1fr}}
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -59,7 +57,7 @@
             <span class="font-medium">Crypto & Encoding</span><span>▾</span>
           </button>
           <div id="grp-crypto" class="p-2 border-t space-y-1">
-            <button data-tool="base64" class="nav-item">Base64 Encode Decode</button>
+            <button data-tool="base64" class="nav-item">Base64 Encode/Decode</button>
           </div>
         </section>
 
@@ -69,8 +67,8 @@
             <span class="font-medium">Risk & Governance</span><span>▾</span>
           </button>
           <div id="grp-risk" class="p-2 border-t space-y-1">
-            <button data-tool="cvss" class="nav-item">CVSS Helper (soon)</button>
-            <button data-tool="riskMath" class="nav-item">ALE SLE ARO (soon)</button>
+            <button data-tool="ale" class="nav-item">ALE / SLE / ARO Calculator</button>
+            <button data-tool="cvss" class="nav-item">CVSS v3.1 Vector Helper</button>
           </div>
         </section>
 
@@ -80,8 +78,9 @@
             <span class="font-medium">SIEM & Detection</span><span>▾</span>
           </button>
           <div id="grp-siem" class="p-2 border-t space-y-1">
-            <button data-tool="kqlCheat" class="nav-item">KQL Cheat Sheet (soon)</button>
-            <button data-tool="splCheat" class="nav-item">SPL Cheat Sheet (soon)</button>
+            <button data-tool="kqlCheat" class="nav-item">KQL Cheat Sheet</button>
+            <button data-tool="splCheat" class="nav-item">SPL Cheat Sheet</button>
+            <button data-tool="regex" class="nav-item">Regex Tester</button>
           </div>
         </section>
 
@@ -91,7 +90,15 @@
             <span class="font-medium">Runbooks</span><span>▾</span>
           </button>
           <div id="grp-runbooks" class="p-2 border-t space-y-1">
-            <button data-tool="rb-ransomware" class="nav-item">Ransomware Suspected</button>
+            <button data-tool="runbook" data-runbook="ransomware" class="nav-item">Ransomware Suspected</button>
+            <button data-tool="runbook" data-runbook="unauth" class="nav-item">Unauthorized Access</button>
+            <button data-tool="runbook" data-runbook="phishing" class="nav-item">Phishing Wave</button>
+            <button data-tool="runbook" data-runbook="exfil" class="nav-item">Active Data Exfiltration</button>
+            <button data-tool="runbook" data-runbook="lateral" class="nav-item">Lateral Movement</button>
+            <button data-tool="runbook" data-runbook="webshell" class="nav-item">Web Shell Suspected</button>
+            <button data-tool="runbook" data-runbook="ddos" class="nav-item">DDoS / Edge Exploitation</button>
+            <button data-tool="runbook" data-runbook="insider" class="nav-item">Insider Data Mishandling</button>
+            <button data-tool="runbook" data-runbook="lostdevice" class="nav-item">Lost/Stolen Device</button>
           </div>
         </section>
 
@@ -118,7 +125,7 @@
             <button data-tool="base64" class="card-link">Open Base64</button>
             <button data-tool="cidr" class="card-link">Open CIDR</button>
             <button data-tool="wildcard" class="card-link">Open Wildcard</button>
-            <button data-tool="goldLinks" class="card-link">Open Gold Links</button>
+            <button data-tool="kqlCheat" class="card-link">Open KQL</button>
           </div>
         </div>
       </div>
@@ -126,7 +133,7 @@
       <!-- Base64 -->
       <div id="view-base64" class="view hidden bg-white border rounded-md p-4">
         <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold">Base64 Encode Decode</h2>
+          <h2 class="text-lg font-semibold">Base64 Encode/Decode</h2>
           <div class="text-xs text-slate-500">Client side only</div>
         </div>
         <div class="grid2 mt-3">
@@ -210,13 +217,11 @@
             <label class="text-sm">Unix epoch (seconds)</label>
             <input id="ts-epoch" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="1718192000">
             <button id="ts-from-epoch" class="btn mt-2">Epoch → Human</button>
-            <div class="text-xs text-slate-500 mt-1">Assumes UTC for parsing</div>
           </div>
           <div class="border rounded-md p-3">
             <label class="text-sm">Human (YYYY-MM-DD HH:mm:ss)</label>
             <input id="ts-human" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="2025-06-12 15:30:00">
             <button id="ts-to-epoch" class="btn mt-2">Human → Epoch</button>
-            <div class="text-xs text-slate-500 mt-1">Assumes input is UTC</div>
           </div>
           <div class="border rounded-md p-3">
             <label class="text-sm">Results</label>
@@ -225,21 +230,122 @@
         </div>
       </div>
 
-      <!-- CIDR calculator (IPv4) -->
-      <div id="view-cidr" class="view hidden bg-white border rounded-md p-4">
-        <h2 class="text-lg font-semibold">CIDR Calculator (IPv4)</h2>
+      <!-- ALE/SLE/ARO -->
+      <div id="view-ale" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">ALE / SLE / ARO Calculator</h2>
+        <div class="grid3 mt-3">
+          <div class="border rounded-md p-3">
+            <label class="text-sm">Asset Value (AV)</label>
+            <input id="av" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="100000">
+            <label class="text-sm mt-3 block">Exposure Factor (EF, 0–1)</label>
+            <input id="ef" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="0.3">
+            <label class="text-sm mt-3 block">Annualized Rate of Occurrence (ARO)</label>
+            <input id="aro" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="0.2">
+            <button id="calc-ale" class="btn mt-2">Calculate</button>
+          </div>
+          <div class="border rounded-md p-3 col-span-2">
+            <label class="text-sm">Results</label>
+            <textarea id="ale-out" class="w-full h-40 border rounded-md p-2 mono" readonly></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- CVSS v3.1 helper -->
+      <div id="view-cvss" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">CVSS v3.1 Vector Helper</h2>
+        <p class="text-sm text-slate-600">Build a base vector string quickly, then open in FIRST/NVD calculators for official scoring.</p>
         <div class="grid2 mt-3">
           <div class="border rounded-md p-3">
-            <label class="text-sm">IP address</label>
-            <input id="cidr-ip" class="w-full border rounded-md px-2 py-1 mt-1 mono" placeholder="192.168.1.10">
-            <label class="text-sm mt-3 block">Prefix (0–32)</label>
-            <input id="cidr-prefix" type="number" min="0" max="32" class="w-full border rounded-md px-2 py-1 mt-1" placeholder="24">
-            <button id="cidr-calc" class="btn mt-2">Calculate</button>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <label>AV</label>
+              <select id="cvss-av" class="border rounded px-2 py-1">
+                <option value="AV:N">Network</option><option value="AV:A">Adjacent</option><option value="AV:L">Local</option><option value="AV:P">Physical</option>
+              </select>
+              <label>AC</label>
+              <select id="cvss-ac" class="border rounded px-2 py-1">
+                <option value="AC:L">Low</option><option value="AC:H">High</option>
+              </select>
+              <label>PR</label>
+              <select id="cvss-pr" class="border rounded px-2 py-1">
+                <option value="PR:N">None</option><option value="PR:L">Low</option><option value="PR:H">High</option>
+              </select>
+              <label>UI</label>
+              <select id="cvss-ui" class="border rounded px-2 py-1">
+                <option value="UI:N">None</option><option value="UI:R">Required</option>
+              </select>
+              <label>S</label>
+              <select id="cvss-s" class="border rounded px-2 py-1">
+                <option value="S:U">Unchanged</option><option value="S:C">Changed</option>
+              </select>
+              <label>C</label>
+              <select id="cvss-c" class="border rounded px-2 py-1">
+                <option value="C:N">None</option><option value="C:L">Low</option><option value="C:H">High</option>
+              </select>
+              <label>I</label>
+              <select id="cvss-i" class="border rounded px-2 py-1">
+                <option value="I:N">None</option><option value="I:L">Low</option><option value="I:H">High</option>
+              </select>
+              <label>A</label>
+              <select id="cvss-a" class="border rounded px-2 py-1">
+                <option value="A:N">None</option><option value="A:L">Low</option><option value="A:H">High</option>
+              </select>
+            </div>
+            <button id="cvss-build" class="btn mt-3">Build Vector</button>
           </div>
           <div class="border rounded-md p-3">
-            <label class="text-sm">Results</label>
-            <textarea id="cidr-out" class="w-full h-48 border rounded-md p-2 mono" readonly></textarea>
+            <label class="text-sm">Vector</label>
+            <input id="cvss-vector" class="w-full border rounded px-2 py-1 mono" readonly>
+            <div class="flex gap-2 mt-2 text-sm">
+              <a id="cvss-first" class="a" target="_blank">Open in FIRST</a>
+              <a id="cvss-nvd" class="a" target="_blank">Open in NVD</a>
+            </div>
+            <div id="cvss-note" class="text-xs text-slate-500 mt-2">Exact score should be computed in the official calculators.</div>
           </div>
+        </div>
+      </div>
+
+      <!-- KQL cheat sheet -->
+      <div id="view-kqlCheat" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">KQL Cheat Sheet</h2>
+        <div id="kql-body" class="mt-3 space-y-3"></div>
+      </div>
+
+      <!-- SPL cheat sheet -->
+      <div id="view-splCheat" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">SPL Cheat Sheet</h2>
+        <div id="spl-body" class="mt-3 space-y-3"></div>
+      </div>
+
+      <!-- Regex tester -->
+      <div id="view-regex" class="view hidden bg-white border rounded-md p-4">
+        <h2 class="text-lg font-semibold">Regex Tester</h2>
+        <div class="grid2 mt-3">
+          <div class="border rounded-md p-3">
+            <label class="text-sm">Pattern (JS)</label>
+            <input id="re-pattern" class="w-full border rounded px-2 py-1 mono" placeholder="(GET|POST)\\s+(/\\S*)">
+            <label class="text-sm mt-2 block">Flags</label>
+            <input id="re-flags" class="w-full border rounded px-2 py-1 mono" placeholder="gi">
+            <label class="text-sm mt-2 block">Text</label>
+            <textarea id="re-text" class="w-full h-40 border rounded p-2 mono" placeholder="Paste sample text or logs here"></textarea>
+            <button id="re-run" class="btn mt-2">Run</button>
+          </div>
+          <div class="border rounded-md p-3">
+            <label class="text-sm">Matches</label>
+            <textarea id="re-out" class="w-full h-56 border rounded p-2 mono" readonly></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Runbook renderer (shared view) -->
+      <div id="view-runbook" class="view hidden bg-white border rounded-md p-4">
+        <h2 id="rb-title" class="text-lg font-semibold">Runbook</h2>
+        <div class="mt-2">
+          <div class="tabs mb-3">
+            <button class="tab active" data-tab="#rb-quick">5 minute actions</button>
+            <button class="tab" data-tab="#rb-full">Full checklist</button>
+          </div>
+          <div id="rb-quick" class="tabview"></div>
+          <div id="rb-full" class="tabview hidden"></div>
         </div>
       </div>
 
@@ -255,40 +361,11 @@
           <li><a class="a" href="https://www.nist.gov/cyberframework" target="_blank">NIST CSF</a></li>
           <li><a class="a" href="https://docs.splunk.com/Documentation/Splunk/9.4.2/SearchReference/WhatsInThisManual" target="_blank">Splunk SPL Search Reference</a></li>
           <li><a class="a" href="https://docs.paloaltonetworks.com/" target="_blank">Palo Alto Networks Tech Docs</a></li>
-          <li><a class="a" href="https://www.first.org/cvss/calculator/3-1" target="_blank">CVSS v3.1 Calculator</a></li>
+          <li><a class="a" href="https://www.first.org/cvss/calculator/3-1" target="_blank">FIRST CVSS v3.1 Calculator</a></li>
           <li><a class="a" href="https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator" target="_blank">NVD CVSS v3 Calculator</a></li>
           <li><a class="a" href="https://github.com/SigmaHQ/sigma" target="_blank">Sigma Rules</a></li>
           <li><a class="a" href="https://atomicredteam.io/" target="_blank">Atomic Red Team</a></li>
         </ul>
-      </div>
-
-      <!-- Runbook example -->
-      <div id="view-rb-ransomware" class="view hidden bg-white border rounded-md p-4">
-        <h2 class="text-lg font-semibold">Runbook: Ransomware suspected</h2>
-        <div class="mt-2">
-          <div class="tabs mb-3">
-            <button class="tab active" data-tab="#rb-r-quick">5 minute actions</button>
-            <button class="tab" data-tab="#rb-r-full">Full checklist</button>
-          </div>
-          <div id="rb-r-quick" class="tabview">
-            <ol class="list-decimal ml-5 text-sm space-y-2">
-              <li>Isolate impacted hosts from network.</li>
-              <li>Disable interactive logons for suspected accounts.</li>
-              <li>Capture volatile data if safe to do so.</li>
-              <li>Block IOC domains/hashes at edge and EDR.</li>
-              <li>Notify IR lead and legal.</li>
-            </ol>
-          </div>
-          <div id="rb-r-full" class="tabview hidden">
-            <ul class="list-disc ml-5 text-sm space-y-2">
-              <li>Scope affected systems, users, and window.</li>
-              <li>Collect EDR, Sysmon, Windows Security, firewall, proxy logs.</li>
-              <li>Contain: segment, revoke tokens, reset creds, rotate keys.</li>
-              <li>Recover: restore clean backups, validate integrity.</li>
-              <li>Post-incident review and detection updates.</li>
-            </ul>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -314,138 +391,6 @@
     </aside>
   </main>
 
-  <!-- Inline logic -->
-  <script>
-    // ===== view routing =====
-    const views = {}; document.querySelectorAll('.view').forEach(v => views[v.id]=v);
-    function showView(id){ Object.values(views).forEach(v=>v.classList.add('hidden')); (views[id]||views['view-dashboard']).classList.remove('hidden'); updateRelatedLinks(id); }
-    showView('view-dashboard');
-
-    // ===== collapsibles =====
-    document.querySelectorAll('[data-collapse]').forEach(b=>b.addEventListener('click',()=>{ const t=document.querySelector(b.getAttribute('data-collapse')); if(t) t.classList.toggle('hidden'); }));
-
-    // ===== nav + dashboard links =====
-    function wireNav(){ document.querySelectorAll('.nav-item,.card-link').forEach(b=>b.addEventListener('click',()=>{ const id=b.getAttribute('data-tool'); if(id) showView('view-'+id); })); }
-    wireNav();
-
-    // ===== tabs =====
-    function wireTabs(root=document){
-      root.querySelectorAll('.tabs .tab').forEach(t=>t.addEventListener('click',()=>{
-        const box=t.closest('.p-4'); t.parentElement.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
-        box.querySelectorAll('.tabview').forEach(v=>v.classList.add('hidden')); box.querySelector(t.getAttribute('data-tab')).classList.remove('hidden');
-      }));
-    } wireTabs();
-
-    // ===== search filters left rail =====
-    const g = document.getElementById('globalSearch');
-    g.addEventListener('input', ()=>{
-      const q=g.value.trim().toLowerCase();
-      document.querySelectorAll('#leftNav section').forEach(sec=>{
-        const body=sec.querySelector('div[id^="grp-"]'); const items=sec.querySelectorAll('.nav-item'); let any=false;
-        items.forEach(i=>{ const hit=i.textContent.toLowerCase().includes(q); i.style.display=hit?'block':'none'; if(hit) any=true; });
-        if(!body) return; if(q==='') body.classList.remove('hidden'); else body.classList.toggle('hidden',!any);
-      });
-    });
-
-    // ===== theme toggle =====
-    document.getElementById('themeToggle').addEventListener('click',()=>{
-      document.documentElement.classList.toggle('dark'); document.body.classList.toggle('bg-slate-900'); document.body.classList.toggle('text-slate-100'); toast('Theme toggled');
-    });
-
-    // ===== quick links =====
-    const qlKey='mc_quicklinks';
-    function loadQL(){ const ul=document.getElementById('ql-list'); ul.innerHTML=''; const list=JSON.parse(localStorage.getItem(qlKey)||'[]');
-      list.forEach((u,idx)=>{ const li=document.createElement('li'); const a=document.createElement('a'); a.href=u;a.target='_blank';a.textContent=u;a.className='a';
-        const del=document.createElement('button'); del.textContent='×'; del.className='ml-2 btn';
-        del.addEventListener('click',()=>{ const arr=JSON.parse(localStorage.getItem(qlKey)||'[]'); arr.splice(idx,1); localStorage.setItem(qlKey,JSON.stringify(arr)); loadQL(); });
-        li.appendChild(a); li.appendChild(del); ul.appendChild(li); });
-    }
-    document.getElementById('ql-add').addEventListener('click',()=>{ const inp=document.getElementById('ql-url'); const url=inp.value.trim(); if(!url) return; const list=JSON.parse(localStorage.getItem(qlKey)||'[]'); list.push(url); localStorage.setItem(qlKey,JSON.stringify(list)); inp.value=''; loadQL(); });
-    loadQL();
-
-    // ===== notes autosave =====
-    const notesKey='mc_notes'; const notes=document.getElementById('notes'); notes.value=localStorage.getItem(notesKey)||''; notes.addEventListener('input',()=>localStorage.setItem(notesKey,notes.value));
-
-    // ===== related links per view =====
-    function updateRelatedLinks(viewId){
-      const map={
-        'view-base64': [
-          ['MDN Base64','https://developer.mozilla.org/en-US/docs/Glossary/Base64'],
-          ['MDN btoa','https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa'],
-          ['MDN atob','https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/atob']
-        ],
-        'view-cidr': [
-          ['IANA IPv4 Special-Purpose','https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml'],
-          ['RFC 4632 CIDR','https://www.rfc-editor.org/rfc/rfc4632']
-        ],
-        'view-goldLinks': [
-          ['KQL Docs','https://learn.microsoft.com/en-us/kusto/query'],
-          ['MITRE ATT&CK','https://attack.mitre.org/matrices/enterprise/'],
-          ['Splunk Search Reference','https://docs.splunk.com/Documentation/Splunk/9.4.2/SearchReference/WhatsInThisManual'],
-          ['Palo Alto Tech Docs','https://docs.paloaltonetworks.com/']
-        ],
-        'view-rb-ransomware': [
-          ['CISA KEV','https://www.cisa.gov/known-exploited-vulnerabilities-catalog'],
-          ['NIST CSF','https://www.nist.gov/cyberframework']
-        ]
-      };
-      const ul=document.getElementById('relatedLinks'); ul.innerHTML=''; (map[viewId]||[]).forEach(([t,u])=>{ const li=document.createElement('li'); const a=document.createElement('a'); a.href=u;a.target='_blank';a.textContent=t;a.className='a'; li.appendChild(a); ul.appendChild(li); });
-    }
-
-    // ===== Base64 (UTF-8 safe) =====
-    const b64In=document.getElementById('b64-in'), b64Out=document.getElementById('b64-out');
-    function b64enc(s){ const bytes=new TextEncoder().encode(s); let bin=''; bytes.forEach(b=>bin+=String.fromCharCode(b)); return btoa(bin); }
-    function b64dec(b){ const bin=atob(b); const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0)); return new TextDecoder().decode(bytes); }
-    document.getElementById('b64-encode')?.addEventListener('click',()=>{ try{ b64Out.value=b64enc(b64In.value); toast('Encoded'); }catch(e){ b64Out.value='Error: '+e.message; }});
-    document.getElementById('b64-decode')?.addEventListener('click',()=>{ try{ b64Out.value=b64dec(b64In.value.trim()); toast('Decoded'); }catch(e){ b64Out.value='Error: '+e.message; }});
-    document.getElementById('b64-clear')?.addEventListener('click',()=>{ b64In.value=''; b64Out.value=''; });
-    document.getElementById('b64-copy')?.addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(b64Out.value); toast('Copied'); }catch{ toast('Copy failed'); }});
-
-    // ===== Wildcard mask =====
-    function parseDotted(str){ const parts=str.trim().split('.'); if(parts.length!==4) throw new Error('Use dotted IPv4 like 255.255.255.0'); const octets=parts.map(p=>{ const n=Number(p); if(!Number.isInteger(n)||n<0||n>255) throw new Error('Each octet 0..255'); return n; }); return octets; }
-    function toDotted(arr){ return arr.join('.'); }
-    function wildcardFromMask(oct){ return oct.map(o=>255-o); }
-    function maskFromPrefix(pfx){ const p=Number(pfx); if(!Number.isInteger(p)||p<0||p>32) throw new Error('Prefix 0..32'); const bits=Array(32).fill(0).map((_,i)=>i<p?1:0); const o=[]; for(let i=0;i<4;i++){ const b=bits.slice(i*8,i*8+8).join(''); o.push(parseInt(b.padEnd(8,'0'),2)); } return o; }
-    document.getElementById('wm-fromMask')?.addEventListener('click',()=>{ const inp=document.getElementById('wm-subnet'); const out=document.getElementById('wm-out-fromMask'); try{ out.value=toDotted(wildcardFromMask(parseDotted(inp.value))); toast('Calculated'); }catch(e){ out.value='Error: '+e.message; }});
-    document.getElementById('wm-fromCidr')?.addEventListener('click',()=>{ const c=document.getElementById('wm-cidr'); const om=document.getElementById('wm-out-mask'); const ow=document.getElementById('wm-out-wild'); try{ const m=maskFromPrefix(c.value); om.value=toDotted(m); ow.value=toDotted(wildcardFromMask(m)); toast('Calculated'); }catch(e){ om.value=ow.value='Error: '+e.message; }});
-
-    // ===== Hex ↔ Dec =====
-    document.getElementById('dec-to-hex')?.addEventListener('click',()=>{ const v=document.getElementById('dec-in').value.trim(); const out=document.getElementById('dec-hex-out'); if(v===''){out.value='';return;} const n=Number(v); if(!Number.isFinite(n)||n<0){ out.value='Error: enter a non-negative number'; return; } out.value='0x'+Math.floor(n).toString(16).toUpperCase(); });
-    document.getElementById('hex-to-dec')?.addEventListener('click',()=>{ let v=document.getElementById('hex-in').value.trim(); const out=document.getElementById('hex-dec-out'); if(v===''){out.value='';return;} v=v.replace(/^0x/i,''); if(!/^[0-9a-f]+$/i.test(v)){ out.value='Error: hex only 0-9 A-F'; return; } out.value=String(parseInt(v,16)); });
-
-    // ===== Timestamp converter =====
-    function pad(n){return n.toString().padStart(2,'0');}
-    function fmt(d){ return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+':'+pad(d.getUTCSeconds())+' UTC'; }
-    document.getElementById('ts-from-epoch')?.addEventListener('click',()=>{ const v=Number(document.getElementById('ts-epoch').value.trim()); const out=document.getElementById('ts-out'); if(!Number.isFinite(v)){ out.value='Error: epoch seconds number required'; return; } const d=new Date(v*1000); out.value='UTC: '+fmt(d)+'\nLocal: '+new Date(v*1000).toString(); });
-    document.getElementById('ts-to-epoch')?.addEventListener('click',()=>{ const s=document.getElementById('ts-human').value.trim(); const out=document.getElementById('ts-out'); if(!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s)){ out.value='Error: use YYYY-MM-DD HH:mm:ss'; return; } const [date,time]=s.split(' '); const [Y,M,D]=date.split('-').map(Number); const [h,m,sec]=time.split(':').map(Number); const ms=Date.UTC(Y,M-1,D,h,m,sec); out.value='Epoch (s): '+Math.floor(ms/1000)+'\nUTC: '+fmt(new Date(ms))+'\nLocal: '+new Date(ms).toString(); });
-
-    // ===== CIDR calculator (IPv4) =====
-    function ipToInt(ip){ const a=ip.trim().split('.').map(x=>Number(x)); if(a.length!==4||a.some(x=>!Number.isInteger(x)||x<0||x>255)) throw new Error('Enter IPv4 like 192.168.1.10'); return ((a[0]<<24)>>>0) + (a[1]<<16) + (a[2]<<8) + a[3]; }
-    function intToIp(n){ return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.'); }
-    function maskFromPrefixInt(p){ if(p<0||p>32) throw new Error('Prefix 0..32'); return p===0?0:(((0xFFFFFFFF<< (32-p))>>>0)); }
-    document.getElementById('cidr-calc')?.addEventListener('click',()=>{
-      const ipStr=document.getElementById('cidr-ip').value.trim(); const pfx=Number(document.getElementById('cidr-prefix').value.trim()); const out=document.getElementById('cidr-out');
-      try{
-        const ip=ipToInt(ipStr); const mask=maskFromPrefixInt(pfx); const network=(ip & mask)>>>0; const broadcast=(network | (~mask>>>0))>>>0;
-        const firstHost = (pfx===32)? network : ((network+1)>>>0);
-        const lastHost  = (pfx>=31)? broadcast : ((broadcast-1)>>>0);
-        const hostCount = pfx===32? 1 : (pfx===31? 2 : Math.max(0, (broadcast - network - 1)));
-        const maskArr=[(mask>>>24)&255,(mask>>>16)&255,(mask>>>8)&255,mask&255];
-        const wildcardArr=maskArr.map(o=>255-o);
-        out.value =
-`Network:   ${intToIp(network)}/${pfx}
-Broadcast: ${intToIp(broadcast)}
-First host:${intToIp(firstHost)}
-Last host: ${intToIp(lastHost)}
-Hosts:     ${hostCount}
-Mask:      ${maskArr.join('.')}
-Wildcard:  ${wildcardArr.join('.')}`;
-        toast('Calculated');
-      }catch(e){ out.value='Error: '+e.message; }
-    });
-
-    // ===== tiny toast =====
-    function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),1200); }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
